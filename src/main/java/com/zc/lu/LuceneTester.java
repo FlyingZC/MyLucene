@@ -10,9 +10,8 @@ import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopDocs;
 import org.junit.Test;
 
-//测试索引和 搜索
-public class LuceneTester
-{
+// 测试索引和 搜索
+public class LuceneTester {
 
     String indexDir = "E:\\Lucene\\Index";
 
@@ -22,27 +21,20 @@ public class LuceneTester
 
     Searcher searcher;
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         LuceneTester tester;
-        try
-        {
+        try {
             tester = new LuceneTester();
             tester.createIndex();
             tester.search("Mohan");
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        catch (ParseException e)
-        {
+        } catch (ParseException e) {
             e.printStackTrace();
         }
     }
 
-    private void createIndex() throws IOException
-    {
+    private void createIndex() throws IOException {
         indexer = new Indexer(indexDir);
         int numIndexed;
         long startTime = System.currentTimeMillis();
@@ -52,16 +44,14 @@ public class LuceneTester
         System.out.println(numIndexed + " File indexed, time taken: " + (endTime - startTime) + " ms");
     }
 
-    private void search(String searchQuery) throws IOException, ParseException
-    {
+    private void search(String searchQuery) throws IOException, ParseException {
         searcher = new Searcher(indexDir);
         long startTime = System.currentTimeMillis();
         TopDocs hits = searcher.search(searchQuery);
         long endTime = System.currentTimeMillis();
 
         System.out.println(hits.totalHits + " documents found. Time :" + (endTime - startTime));
-        for (ScoreDoc scoreDoc : hits.scoreDocs)
-        {
+        for (ScoreDoc scoreDoc : hits.scoreDocs) {
             Document doc = searcher.getDocument(scoreDoc);
             System.out.println("File: " + doc.get(LuceneConstants.FILE_PATH));
         }
@@ -69,8 +59,7 @@ public class LuceneTester
     }
 
     private void searchUsingTermRangeQuery(String searchQueryMin, String searchQueryMax)
-            throws IOException, ParseException
-    {
+            throws IOException, ParseException {
         searcher = new Searcher(indexDir);
         long startTime = System.currentTimeMillis();
         //create the term query object
@@ -80,8 +69,7 @@ public class LuceneTester
         long endTime = System.currentTimeMillis();
 
         System.out.println(hits.totalHits + " documents found. Time :" + (endTime - startTime) + "ms");
-        for (ScoreDoc scoreDoc : hits.scoreDocs)
-        {
+        for (ScoreDoc scoreDoc : hits.scoreDocs) {
             Document doc = searcher.getDocument(scoreDoc);
             System.out.println("File: " + doc.get(LuceneConstants.FILE_PATH));
         }
@@ -90,20 +78,14 @@ public class LuceneTester
 
     //TermRangeQuery是在使用的范围内的文本的词条都被搜索,这里只搜索(record2和record6)
     @Test
-    public void testSearchUsingTermRangeQuery()
-    {
+    public void testSearchUsingTermRangeQuery() {
         LuceneTester tester;
-        try
-        {
+        try {
             tester = new LuceneTester();
             tester.searchUsingTermRangeQuery("record2.txt", "record6.txt");
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        catch (ParseException e)
-        {
+        } catch (ParseException e) {
             e.printStackTrace();
         }
     }

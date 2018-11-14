@@ -13,29 +13,26 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
-//03 用于索引的原始数据
-public class Indexer
-{
+
+// 03 用于索引的原始数据
+public class Indexer {
 
     private IndexWriter writer;
 
-    public Indexer(String indexDirectoryPath) throws IOException
-    {
+    public Indexer(String indexDirectoryPath) throws IOException {
         //this directory will contain the indexes,该文件将会包含索引
         Directory indexDirectory = FSDirectory.open(new File(indexDirectoryPath));
 
         //create the indexer 创建索引
-        writer = new IndexWriter(indexDirectory, new StandardAnalyzer(Version.LUCENE_36), true,
+        writer = new IndexWriter(indexDirectory, new StandardAnalyzer(Version.LUCENE_35), true,
                 IndexWriter.MaxFieldLength.UNLIMITED);
     }
 
-    public void close() throws CorruptIndexException, IOException
-    {
+    public void close() throws CorruptIndexException, IOException {
         writer.close();
     }
 
-    private Document getDocument(File file) throws IOException
-    {
+    private Document getDocument(File file) throws IOException {
         Document document = new Document();
 
         //index file contents
@@ -54,22 +51,18 @@ public class Indexer
         return document;
     }
 
-    private void indexFile(File file) throws IOException
-    {
+    private void indexFile(File file) throws IOException {
         System.out.println("Indexing " + file.getCanonicalPath());
         Document document = getDocument(file);
         writer.addDocument(document);
     }
 
-    public int createIndex(String dataDirPath, FileFilter filter) throws IOException
-    {
+    public int createIndex(String dataDirPath, FileFilter filter) throws IOException {
         //get all files in the data directory
         File[] files = new File(dataDirPath).listFiles();
 
-        for (File file : files)
-        {
-            if (!file.isDirectory() && !file.isHidden() && file.exists() && file.canRead() && filter.accept(file))
-            {
+        for (File file : files) {
+            if (!file.isDirectory() && !file.isHidden() && file.exists() && file.canRead() && filter.accept(file)) {
                 indexFile(file);
             }
         }
